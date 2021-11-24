@@ -20,5 +20,9 @@
 	"bugs": {
 		"url": "https://github.com/sanggayasa/api-bersih-apps/issues"
 	},
-	"homepage": "https://github.com/sanggayasa/api-bersih-apps#readme"
+	"homepage": "https://github.com/sanggayasa/api-bersih-apps#readme",
+	"devDependencies": {
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-plugin-import": "^2.25.3"
+	}
 }
