@@ -1,23 +1,24 @@
 {
-  "name": "api-bersih-apps",
-  "version": "1.0.0",
-  "description": "api bersih apps",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sanggayasa/api-bersih-apps.git"
-  },
-  "keywords": [
-    "api",
-    "bersih"
-  ],
-  "author": "sangga",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/sanggayasa/api-bersih-apps/issues"
-  },
-  "homepage": "https://github.com/sanggayasa/api-bersih-apps#readme"
+	"name": "api-bersih-apps",
+	"version": "1.0.0",
+	"description": "api bersih apps",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/sanggayasa/api-bersih-apps.git"
+	},
+	"keywords": [
+		"api",
+		"bersih"
+	],
+	"author": "sangga",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/sanggayasa/api-bersih-apps/issues"
+	},
+	"homepage": "https://github.com/sanggayasa/api-bersih-apps#readme"
 }
