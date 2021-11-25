@@ -4,7 +4,8 @@
 	"description": "api bersih apps",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "nodemon ./src/server.js"
 	},
 	"repository": {
 		"type": "git",
@@ -25,6 +26,7 @@
 		"eslint-plugin-import": "^2.25.3"
 	},
 	"dependencies": {
-		"@hapi/hapi": "^20.2.1"
+		"@hapi/hapi": "^20.2.1",
+		"nanoid": "^3.1.30"
 	}
 }
