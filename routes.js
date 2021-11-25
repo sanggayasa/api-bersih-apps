@@ -32,12 +32,12 @@ const routes = [
 		path: '/hello/{name?}',
 		handler: (request, h) => {
 			const { name = 'stranger' } = request.params;
-            const { lang } = request.query;
+			const { lang } = request.query;
 
-						if (lang === 'id') {
-							return `Hai, ${name}!`;
-						}
-                        
+			if (lang === 'id') {
+				return `Hai, ${name}!`;
+			}
+
 			return `Hello, ${name}!`;
 		},
 	},
@@ -46,6 +46,14 @@ const routes = [
 		path: '/{any*}',
 		handler: (request, h) => {
 			return 'Halaman tidak ditemukan';
+		},
+	},
+	{
+		method: 'POST',
+		path: '/login',
+		handler: (request, h) => {
+			const { username, password } = request.payload;
+			return `Welcome ${username}!`;
 		},
 	},
 ];
