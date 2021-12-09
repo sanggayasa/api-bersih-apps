@@ -1,21 +1,15 @@
-//mysql connection
 const mysql = require('mysql');
 
-const connectDb = () => {
-	const connection = mysql.createConnection({
-		host: 'localhost',
-		user: 'root',
-		password: '',
-		database: 'bersih_db',
-	});
+const conn = mysql.createConnection({
+	host:"localhost",
+	user:"root",
+	password:"",
+	database:"bersih_db"
+});
 
-	connection.connect(function (err) {
-		if (err) {
-			console.log('something wrong with mysql database connection');
+conn.connect((err)=>{
+	if(err) throw err;
+	console.log("koneksi berhasil");
+});
 
-			connection.end();
-		}
-	});
-};
-
-module.exports = connectDb;
+module.exports = conn;
