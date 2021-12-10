@@ -1,29 +1,17 @@
 const { nanoid } = require('nanoid');
 const notes = require('./notes');
-
+const {datadbs,getDetailsql,editData,insertData,deleteData} = require('./data');
+const con = require('./connectionDb');
 
 // POST HANDLER
-const addNoteHandler = (request, h) => {
+const addNoteHandler = async (request, h) => {
 	const { lokasi,fotoName, deskripsi } = request.payload;
 
 	const id = nanoid(16);
 	const createdAt = new Date().toISOString();
 	const updatedAt = createdAt;
-
-	const newNote = {
-		id,
-		lokasi,
-		fotoName,
-		deskripsi,
-		createdAt,
-		updatedAt,
-	};
-
-	notes.push(newNote);
-
-	const isSuccess = notes.filter((note) => note.id === id).length > 0;
-
-	if (isSuccess) {
+    const insertdatadb = await insertData(createdAt,lokasi,deskripsi);
+	if(insertdatadb == "berhasil"){
 		const response = h.response({
 			status: 'success',
 			message: 'Catatan berhasil ditambahkan',
@@ -47,22 +35,21 @@ const addNoteHandler = (request, h) => {
 const getAllNotesHandler = () => ({
 	status: 'success',
 	data: {
-		notes,
+		datadbs,
 	},
 });
 
 
 //GET DETAIL HANDLER
-const getNoteByIdHandler = (request, h) => {
+const getNoteByIdHandler = async(request, h) => {
 	const { id } = request.params;
-
-	const note = notes.filter((n) => n.id === id)[0];
-
-	if (note !== undefined) {
+	const getdata = await getDetailsql(id);
+	const [datadetail] = getdata;
+	if (getdata.length > 0) {
 		return {
 			status: 'success',
 			data: {
-				note,
+				datadetail,
 			},
 		};
 	}
@@ -75,23 +62,15 @@ const getNoteByIdHandler = (request, h) => {
 	return response;
 };
 
-//edit
-const editNoteByIdHandler = (request, h) => {
+//EDIT
+const editNoteByIdHandler = async(request, h) => {
 	const { id } = request.params;
 
 	const { lokasi,fotoName, deskripsi} = request.payload;
-	const updatedAt = new Date().toISOString();
+	const editdata = await editData(id,lokasi,fotoName, deskripsi);
 
-	const index = notes.findIndex((note) => note.id === id);
+	if (editdata == "berhasil") {
 
-	if (index !== -1) {
-		notes[index] = {
-			...notes[index],
-			lokasi,
-			fotoName,
-			deskripsi,
-			updatedAt,
-		};
 
 		const response = h.response({
 			status: 'success',
@@ -109,14 +88,13 @@ const editNoteByIdHandler = (request, h) => {
 	return response;
 };
 
-//delete
-const deleteNoteByIdHandler = (request, h) => {
+//DELETE
+const deleteNoteByIdHandler = async(request, h) => {
 	const { id } = request.params;
 
-	const index = notes.findIndex((note) => note.id === id);
+	const deletedb = await deleteData(id);
 
-	if (index !== -1) {
-		notes.splice(index, 1);
+	if (deletedb == "berhasil") {
 		const response = h.response({
 			status: 'success',
 			message: 'Catatan berhasil dihapus',
@@ -132,6 +110,8 @@ const deleteNoteByIdHandler = (request, h) => {
 	response.code(404);
 	return response;
 };
+
+
 
 module.exports = {
 	addNoteHandler,
