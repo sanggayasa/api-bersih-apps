@@ -1,73 +1,107 @@
 const { nanoid } = require('nanoid');
-const notes = require('./notes');
-const {datadbs,getDetailsql,editData,insertData,deleteData} = require('./data');
+const {getAllData,getDetailsql,editData,insertData,deleteData} = require('./data');
 const con = require('./connectionDb');
 
 // POST HANDLER
 const addNoteHandler = async (request, h) => {
-	const { lokasi,fotoName, deskripsi } = request.payload;
+	try{
+		const { lokasi, deskripsi } = request.payload;
+		
+		const id = nanoid(16);
+		const createdAt = new Date().toISOString();
+		const updatedAt = createdAt;
+		const insertdatadb = await insertData(createdAt,lokasi,deskripsi,updatedAt);
+		if(insertdatadb == "berhasil"){
+			const response = h.response({
+				status: 'success',
+				message: 'Catatan berhasil ditambahkan',
+				data: {
+					noteId: id,
+				},
+			});
+			response.code(201);
+			return response;
+		}
 
-	const id = nanoid(16);
-	const createdAt = new Date().toISOString();
-	const updatedAt = createdAt;
-    const insertdatadb = await insertData(createdAt,lokasi,deskripsi);
-	if(insertdatadb == "berhasil"){
 		const response = h.response({
-			status: 'success',
-			message: 'Catatan berhasil ditambahkan',
-			data: {
-				noteId: id,
-			},
+			status: 'fail',
+			message: 'Catatan gagal ditambahkan',
 		});
-		response.code(201);
+		response.code(500);
+		return response;
+	}catch(error){
+		const response = h.response({
+			status: 'fail',
+			message: error,
+		});
+		response.code(500);
 		return response;
 	}
-
-	const response = h.response({
-		status: 'fail',
-		message: 'Catatan gagal ditambahkan',
-	});
-	response.code(500);
-	return response;
 };
 
 // GET HANDLER
-const getAllNotesHandler = () => ({
-	status: 'success',
-	data: {
-		datadbs,
-	},
-});
+const getAllNotesHandler =async () => {
 
+	try{
+	const data =await getAllData();
+	console.log(data);
+	return {
+		status:'success',
+		data:{
+			datadbs:data,
+		}
+		
+	};
+	}catch(Rejected){
+		return {
+		status:'error',
+		data:{
+			datadbs:Rejected,
+		}
+		
+	};
+		
+	}
+};
 
 //GET DETAIL HANDLER
 const getNoteByIdHandler = async(request, h) => {
-	const { id } = request.params;
-	const getdata = await getDetailsql(id);
-	const [datadetail] = getdata;
-	if (getdata.length > 0) {
-		return {
-			status: 'success',
-			data: {
-				datadetail,
-			},
-		};
-	}
+	try{
+		const { id } = request.params;
+		const getdata = await getDetailsql(id);
+		const [datadetail] = getdata;
+		if (getdata.length > 0) {
+			return {
+				status: 'success',
+				data: {
+					datadetail,
+				},
+			};
+		}
 
-	const response = h.response({
-		status: 'fail',
-		message: 'Catatan tidak ditemukan',
-	});
-	response.code(404);
-	return response;
+		const response = h.response({
+			status: 'fail',
+			message: 'Catatan tidak ditemukan',
+		});
+		response.code(404);
+		return response;
+
+	}catch(error){
+		const response = h.response({
+			status: 'fail',
+			message: error,
+		});
+		response.code(404);
+		return response;
+	}
 };
 
 //EDIT
 const editNoteByIdHandler = async(request, h) => {
 	const { id } = request.params;
-
-	const { lokasi,fotoName, deskripsi} = request.payload;
-	const editdata = await editData(id,lokasi,fotoName, deskripsi);
+	const updatedAt = new Date().toISOString();
+	const {lokasi, deskripsi,fotoLaporan,fotoSebelum,fotoSesudah} = request.payload;
+	const editdata = await editData(id,lokasi, deskripsi, fotoLaporan,fotoSebelum,fotoSesudah,updatedAt);
 
 	if (editdata == "berhasil") {
 
